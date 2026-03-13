@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Hindu Philosophy AI</title>
+<style>
+body{
+font-family: Arial;
+text-align:center;
+padding:40px;
+background:#f5f5f5;
+}
+
+input{
+width:60%;
+padding:10px;
+font-size:16px;
+}
+
+button{
+padding:10px 20px;
+font-size:16px;
+margin-left:10px;
+cursor:pointer;
+}
+
+#answer{
+margin-top:30px;
+padding:20px;
+background:white;
+border-radius:10px;
+width:70%;
+margin-left:auto;
+margin-right:auto;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Ask Hindu Philosophy</h1>
+
+<input id="question" placeholder="Ask your question...">
+<button onclick="askAI()">Ask</button>
+
+<div id="answer"></div>
+
+<script>
+
+async function askAI(){
+
+let question = document.getElementById("question").value;
+
+let prompt = `
+You are a scholar of Hindu philosophy.
+
+Use Bhagavad Gita, Upanishads, Vedas, Ramayana, Mahabharata.
+
+Answer format:
+- Relevant teaching or verse
+- Meaning
+- Practical guidance
+
+User question: ${question}
+`;
+
+let response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=YOUR_API_KEY",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+contents:[{
+parts:[{text:prompt}]
+}]
+})
+});
+
+let data = await response.json();
+
+let answer = data.candidates[0].content.parts[0].text;
+
+document.getElementById("answer").innerText = answer;
+
+}
+
+</script>
+
+</body>
+</html>
